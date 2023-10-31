@@ -122,4 +122,9 @@ create table funcionarios (
             from (reservas inner join pedido on reservas.idPedido = pedido.idPedido)
             inner join Quartos on reservas.idQuartos = quartos.idQuartos; 
            
+        
+          
+	  
+          
+          
           
