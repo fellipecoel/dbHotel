@@ -55,8 +55,11 @@ create table funcionarios (
     ("3º", "302", "Luxo", 2, "sim", "Casal", "O quarto de 23m² com piso frio, sacada com belíssima vista mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,cofre digital, frigobar abastecido, banheiro com sacador de cabelo, amenities e mesa de trabalho.",
     "https://imagens-revista.vivadecora.com.br/uploads/2019/05/quarto-de-hotel-decorado-em-cores-neutras-com-amplas-janelas.jpg", 572.90, "sim", "King Size", "não");
      insert into Quartos (andar, numeroQuarto, tipoQuarto, ocupacaoMax, situacao, nome, descricao, foto, preco, cafeDaManha, tipoCama, varanda) values 
-    ("2º", "410", "Superior Premier", 3, "sim", "Casal", "O quarto de 23m² com piso frio, sacada com belíssima vista mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,cofre digital, frigobar abastecido, banheiro com sacador de cabelo, amenities e mesa de trabalho.",
+    ("2º", "410", "Superior Premier", 3, "não", "Casal", "O quarto de 23m² com piso frio, sacada com belíssima vista mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,cofre digital, frigobar abastecido, banheiro com sacador de cabelo, amenities e mesa de trabalho.",
     "https://imagens-revista.vivadecora.com.br/uploads/2019/05/quarto-de-hotel-decorado-em-cores-neutras-com-amplas-janelas.jpg", 602.90, "sim", "Queen Size", "sim");
+    
+    
+    
     
     select * from Quartos;
 	select * from Quartos where situacao = "não" order by preco asc;
@@ -115,12 +118,28 @@ create table funcionarios (
           
             describe reservas;
             
+            insert into reservas (idPedido, idQuartos, checkin, checkout) values (2, 2, "2023-11-02 15:00:00", "2023-11-05 14:00:00");
+            
                  select * from reservas;
            
             select reservas.idReserva, pedido.idPedido,
             quartos.idQuartos, quartos.nome, Quartos.andar, Quartos.numeroQuartos
             from (reservas inner join pedido on reservas.idPedido = pedido.idPedido)
             inner join Quartos on reservas.idQuartos = quartos.idQuartos; 
+           
+/*OBJETIVO: selecionar o nome cliente, seu cpf e email, o id do pedido do cliente, a data do pedido, quais quartos fazem parte desse pedido, os tipos dos quartos e seus nomes, assim como
+ os andares em que estão, os numeros de cada quarto, e suas datas de checkin e checkout. */
+ 
+ select clientes.nomeCompleto, clientes.cpf, clientes.email, pedido.idPedido, pedido.dataPedido, Quartos.tipoQuarto,
+ Quartos.nome, Quartos.andar, Quartos.numeroQuarto, Quartos.preco, reservas.checkin, reservas.checkout from
+ clientes inner join pedido on clientes.idCliente =  pedido.idPedido inner join
+ reservas on reservas.idPedido = pedido.idPedido inner join Quartos
+ on reservas.idQuartos = Quartos.idQuartos;
+ 
+ /*OBJETIVO: somar o total que o cliente deverá pegar ao concluir o pedido dos quartos*/
+ select sum(Quartos.preco) as Total from reservas inner join Quartos on reservas.idQuartos = Quartos.idQuartos where idPedido = 1;
+ 
+ 
            
         
           

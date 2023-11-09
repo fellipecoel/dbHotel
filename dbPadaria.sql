@@ -6,10 +6,10 @@ use dbPadaria;
 
 create table Fornecedores(
 idFornecedor int primary key auto_increment,
-nomeFornecedor varchar(50),
+nomeFornecedor varchar(50) not null,
 cnpjFornecedor varchar(20),
 telefoneFornecedor varchar(20),
-emailFornecedor varchar(50),
+emailFornecedor varchar(50) not null unique,
 cep varchar(9),
 enderecoFornecedor varchar(100),
 numeroEndereco varchar(10),
@@ -30,7 +30,8 @@ decriacaoProduto text,
 precoProduto decimal(10,2),
 estoqueProduto int,
 categoriaProduto enum("Pães", "salgado", "Bolo", "Confeitaria"),
-idFornecedor int not null
+idFornecedor int not null,
+foreign key (idFornecedor) references Fornecedores(idFornecedor)
 );
 
 insert into Produtos (nomeProduto, decriacaoProduto, precoProduto, estoqueProduto, categoriaProduto, idFornecedor)values
@@ -44,13 +45,16 @@ de frango desfiado, com fragmentos de salsinha e cebolinha.", 5.00,
 2,"salgado", 1);
 
 select * from Produtos;
+select *from produtos where categoriaProduto = "Pães";
+select *from produtos where precoProduto < 5.00 order by precoProduto asc;
+
 
 create table Clientes(
 idCliente int primary key auto_increment,
 nomeCliente varchar(50),
-cpfCliente varchar(15),
+cpfCliente varchar(15) not null,
 telefoneCliente varchar(20),
-emailCliente varchar(50),
+emailCliente varchar(50) unique,
 cep varchar(9),
 enderecoCliente varchar(100),
 numeroEndereco varchar(10),
@@ -70,14 +74,37 @@ select * from Clientes;
           dataPedido timestamp default current_timestamp,
           statusPedido enum("Pendente", "Finalizado", "Cancelado") not null,
           idCliente int not null,
-          foreign key (idCliente) references clientes(idCliente)
+          foreign key (idCliente) references Clientes(idCliente)
           ); 
           
 insert into Pedidos(statusPedido, idCliente) values ("Pendente", 1);
 insert into Pedidos(statusPedido, idCliente) values ("Finalizado", 2);
 
 select *from Pedidos;
+select *from Pedidos inner join  Clientes on Pedidos.idCliente = Clientes.idCliente;
 
 create table itensPedidos(
-
+iditensPedidos int primary key auto_increment,
+idPedido int not null,
+foreign key (idPedido) references Pedidos(idPedido),
+idProduto int not null,
+foreign key (idProduto) references Produtos(idProduto),
+quantidade int not null
 );
+
+describe itensPedidos;
+
+insert into itensPedidos (idPedido, idProduto, quantidade)values (1, 1, 3);
+insert into itensPedidos (idPedido, idProduto, quantidade)values (1, 2, 5);
+
+
+
+select * from Pedidos inner join Clientes on Pedidos.idCliente = Clientes.idCliente;
+select * from itensPedidos inner join Pedidos on itensPedidos.idPedido = Pedidos.idPedido;
+select * from itensPedidos inner join Pedidos on itensPedidos.idPedido = Pedidos.idPedido;
+select * from itensPedidos inner join Produtos on itensPedidos.idPedido = Produtos.idProduto;
+
+/*OBJETIVO: consultar qual cliente abriu um pedido e o que ele comprou de itens nesse pedido, ou seja, quais produto 
+e quanto de cada um
+QUEM COMPROU? QUANDO COMPROU? O QUE COMPROU? QUANTO COMPROU?  */
+ 
