@@ -44,6 +44,27 @@ insert into Produtos (nomeProduto, decriacaoProduto, precoProduto, estoqueProdut
 de frango desfiado, com fragmentos de salsinha e cebolinha.", 5.00, 
 2,"salgado", 1);
 
+
+update Produtos set validadeProdutos = "2023-11-14" where idProduto;
+update Produtos set pesoProduto = "0.47" where idProduto = 1;
+update Produtos set ingredientesProduto = "2tabletes de caldo de galinha Sal a gosto 6colheres (sopa) de Margarina Qualy Cremosa 750gde farinha de trigo 2ovos 2xícaras (chá) de farinha de rosca" where idProduto;
+
+select sum(quantidade * 15.30) as Total from itensPedidos inner join Produtos on itensPedidos.idProduto = 
+Produtos.idProduto where idPedido = 1;
+
+
+
+update Produtos set validadeProdutos = "2023-11-15" where idProduto;
+update Produtos set pesoProduto = "0.50" where idProduto = 1;
+update Produtos set ingredientesProduto = "4 copos (americanos) de polvilho doce (500 g) 1 colher (sopa) tempero ou sal a gosto 2 copos (americano) de leite (300 ml) óleo 1 copo (americano) de óleo (150 ml) ovo
+2 ovos grandes ou 3 pequenos
+4 copos (americano) de queijo minas meia cura ralado
+óleo para untar" where idProduto;
+
+alter table Produtos ADD column validadeProdutos datetime;
+alter table Produtos ADD column pesoProduto  decimal(10,2);
+alter table Produtos ADD column ingredientesProduto text;
+
 select * from Produtos;
 select *from produtos where categoriaProduto = "Pães";
 select *from produtos where precoProduto < 5.00 order by precoProduto asc;
@@ -107,4 +128,5 @@ select * from itensPedidos inner join Produtos on itensPedidos.idPedido = Produt
 /*OBJETIVO: consultar qual cliente abriu um pedido e o que ele comprou de itens nesse pedido, ou seja, quais produto 
 e quanto de cada um
 QUEM COMPROU? QUANDO COMPROU? O QUE COMPROU? QUANTO COMPROU?  */
+ 
  
