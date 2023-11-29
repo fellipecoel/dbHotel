@@ -39,7 +39,7 @@ create table funcionarios (
      andar varchar(10) not null,
      tipoQuarto varchar(50) not null,
      ocupacaoMax int not null,
-     situacao char(3) not null,
+     disponibilidade char(3) not null,
      nome varchar(50) not null,
      descricao text,
      cafeDaManha char (3) not null,
@@ -51,21 +51,18 @@ create table funcionarios (
     
      describe Quartos;
      
-	 insert into Quartos (andar, numeroQuarto, tipoQuarto, ocupacaoMax, situacao, nome, descricao, foto, preco, cafeDaManha, tipoCama, varanda) values 
+	 insert into Quartos (andar, numeroQuarto, tipoQuarto, ocupacaoMax, disponibilidade, nome, descricao, foto, preco, cafeDaManha, tipoCama, varanda) values 
     ("3º", "302", "Luxo", 2, "sim", "Casal", "O quarto de 23m² com piso frio, sacada com belíssima vista mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,cofre digital, frigobar abastecido, banheiro com sacador de cabelo, amenities e mesa de trabalho.",
     "https://imagens-revista.vivadecora.com.br/uploads/2019/05/quarto-de-hotel-decorado-em-cores-neutras-com-amplas-janelas.jpg", 572.90, "sim", "King Size", "não");
-     insert into Quartos (andar, numeroQuarto, tipoQuarto, ocupacaoMax, situacao, nome, descricao, foto, preco, cafeDaManha, tipoCama, varanda) values 
-    ("2º", "410", "Superior Premier", 3, "não", "Casal", "O quarto de 23m² com piso frio, sacada com belíssima vista mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,cofre digital, frigobar abastecido, banheiro com sacador de cabelo, amenities e mesa de trabalho.",
+     insert into Quartos (andar, numeroQuarto, tipoQuarto, ocupacaoMax, disponibilidade, nome, descricao, foto, preco, cafeDaManha, tipoCama, varanda) values 
+    ("2º", "410", "Superior Premier", 3, "sim", "Casal", "O quarto de 23m² com piso frio, sacada com belíssima vista mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,cofre digital, frigobar abastecido, banheiro com sacador de cabelo, amenities e mesa de trabalho.",
     "https://imagens-revista.vivadecora.com.br/uploads/2019/05/quarto-de-hotel-decorado-em-cores-neutras-com-amplas-janelas.jpg", 602.90, "sim", "Queen Size", "sim");
     
-    
-    
-    
     select * from Quartos;
-	select * from Quartos where situacao = "não" order by preco asc;
-	select * from Quartos where cafeDaManha = "sim" and situacao = "não";
-	select * from Quartos where varanda = "sim" and cafeDaManha = "sim" and situacao ="não";
-	select * from Quartos where preco < 600.00 and situacao = "não";
+	select * from Quartos where disponibilidade = "não" order by preco asc;
+	select * from Quartos where cafeDaManha = "sim" and disponibilidade = "não";
+	select * from Quartos where varanda = "sim" and cafeDaManha = "sim" and disponibilidade ="não";
+	select * from Quartos where preco < 600.00 and disponibilidade = "não";
           
           create table clientes (
           idCliente int primary key auto_increment,
@@ -114,36 +111,45 @@ create table funcionarios (
           );
           
             insert into reservas (idPedido, idQuartos, checkin, checkout) values (1, 2, "2023-11-02 14:00:00", "2023-11-05 12:00:00");
-          insert into reservas (idPedido, idQuartos, checkin, checkout) values (1, 4, "2023-11-02 15:00:00", "2023-11-05 16:00:00");
+          insert into reservas (idPedido, idQuartos, checkin, checkout) values (1, 4, "2023-11-27 15:00:00", "2023-11-05 16:00:00");
           
             describe reservas;
             
-            insert into reservas (idPedido, idQuartos, checkin, checkout) values (2, 2, "2023-11-02 15:00:00", "2023-11-05 14:00:00");
-            
                  select * from reservas;
-           
+           describe Quartos;
             select reservas.idReserva, pedido.idPedido,
-            quartos.idQuartos, quartos.nome, Quartos.andar, Quartos.numeroQuartos
+            Quartos.idQuartos, Quartos.nome, Quartos.andar, Quartos.numeroQuarto
             from (reservas inner join pedido on reservas.idPedido = pedido.idPedido)
-            inner join Quartos on reservas.idQuartos = quartos.idQuartos; 
-           
-/*OBJETIVO: selecionar o nome cliente, seu cpf e email, o id do pedido do cliente, a data do pedido, quais quartos fazem parte desse pedido, os tipos dos quartos e seus nomes, assim como
- os andares em que estão, os numeros de cada quarto, e suas datas de checkin e checkout. */
- 
- select clientes.nomeCompleto, clientes.cpf, clientes.email, pedido.idPedido, pedido.dataPedido, Quartos.tipoQuarto,
- Quartos.nome, Quartos.andar, Quartos.numeroQuarto, Quartos.preco, reservas.checkin, reservas.checkout from
- clientes inner join pedido on clientes.idCliente =  pedido.idPedido inner join
- reservas on reservas.idPedido = pedido.idPedido inner join Quartos
- on reservas.idQuartos = Quartos.idQuartos;
- 
- /*OBJETIVO: somar o total que o cliente deverá pegar ao concluir o pedido dos quartos*/
- select sum(Quartos.preco) as Total from reservas inner join Quartos on reservas.idQuartos = Quartos.idQuartos where idPedido = 1;
- 
- 
+            inner join Quartos on reservas.idQuartos = Quartos.idQuartos; 
            
         
+     /*Cliente Luiz felipe - idPedido 2
+     Quarto reservado: Superior Premier Twin (3° andar, número 302, preço/diária: R$ 572.90)
+     Checkin 27/11/2023 às 10:00
+     Checkout 08/12/2023 às 10:00
+     */
+     
+     /*Buscar o nome do cliente, andar, número do quarto e checkout somete daqueles
+     cuja data do checkout já passou ou é igual à data do sistema*/
+     select clientes.nomeCompleto, Quartos.andar, Quartos.numeroQuarto, reservas.checkout from
+     clientes inner join pedido on clientes.idCliente = pedido.idCliente inner join
+     reservas on reservas.idPedido = pedido.idPedido inner join Quartos
+     on reservas.idQuartos = Quartos.idQuartos <= current_timestamp();
+     
+     
+     
+     /*Atualizar a disponibilidade do quarto somente daqueles */
+     update reservas inner join Quartos on reservas.idQuartos = Quartos.idQuartos
+     set Quartos.disponibilidade  = "sim" where reservas.checkout < current_timestamp();
           
-	  
           
-          
-          
+	select * from Quartos;
+    
+    /*Buscar o nome do cliente, andar, número do quarto, checkout (com data formatada 99/99/9999) e
+    o cálculo de quartos dias faltam para a reserva do cliente encerrar ( dias restantes = do checkout - data de hoje)  */
+	select clientes.nomeCompleto, Quartos.andar, Quartos.numeroQuarto,
+	date_format(reservas.checkout, '%d/%m/%Y') as checkout, datediff(reservas.checkout, curdate()) as dias_restates
+	from clientes inner join pedido on clientes.idCliente = pedido.idCliente inner join
+     reservas on reservas.idPedido = pedido.idPedido inner join Quartos
+     on reservas.idQuartos = Quartos.idQuartos > current_timestamp();
+           

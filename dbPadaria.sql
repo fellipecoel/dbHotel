@@ -129,4 +129,10 @@ select * from itensPedidos inner join Produtos on itensPedidos.idPedido = Produt
 e quanto de cada um
 QUEM COMPROU? QUANDO COMPROU? O QUE COMPROU? QUANTO COMPROU?  */
  
+ /*COPIE, MAS NÃO EXECUTE AINDA! */
+ update itensPedidos inner join Produtos on itensPedidos.idProduto = Produtos.idProduto
+ set Produtos.estoqueProduto = Produtos.estoqueProduto - itensPedidos.quantidade
+ where itensPedidos.quantidade > 0; 
+ 
+ select nomeProduto, estoqueProduto from Produtos;
  
